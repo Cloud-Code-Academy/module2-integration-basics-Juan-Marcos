@@ -38,6 +38,7 @@ public with sharing class DummyJSONCallout {
         HttpRequest request = new HttpRequest();
         request.setEndpoint('callout:DummyJsonUser/' + dummyUserId);
         request.setMethod('GET');
+		request.setHeader('Content-Type', 'application/json');
 
         Http http = new Http();
         HttpResponse response = http.send(request);
@@ -104,6 +105,7 @@ public with sharing class DummyJSONCallout {
         HttpRequest request = new HttpRequest();
         request.setEndpoint('callout:DummyJsonUser/' + 'add');
         request.setMethod('POST');
+		request.setHeader('Content-Type', 'application/json');
         request.setBody(generateDummyJsonUserPayload(contactId));
 
         Http http = new Http();
