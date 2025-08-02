@@ -136,7 +136,14 @@ public with sharing class DummyJSONCallout {
      */
 	@TestVisible // Allows test class to see this method. Since it is private, it would not be visible otherwise.
 	private static String generateDummyJsonUserPayload(String contactId) {
-        Contact con = [SELECT FirstName, LastName, Email, Phone, Birthdate, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact WHERE Id = :contactId LIMIT 1];
+        List<Contact> contacts = [SELECT FirstName, LastName, Email, Phone, Birthdate, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact WHERE Id = :contactId LIMIT 1];
+
+        if (contacts.isEmpty()) {
+            System.debug('No Contact found with ID: ' + contactId);
+            return null;
+        }
+        Contact con = contacts[0];
+
         String jsonPayload = JSON.serialize(new Map<String, Object>{
 			'salesforceId' => con.Id,
             'firstName' => con.FirstName,
