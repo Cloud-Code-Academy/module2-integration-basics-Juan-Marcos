@@ -43,11 +43,17 @@ public with sharing class DummyJSONCallout {
         Http http = new Http();
         HttpResponse response = http.send(request);
 
-        if(response.getStatusCode() == 200) {
-            Contact cont = createContactFromJson(response.getBody());
-			cont.DummyJSON_Id__c = dummyUserId;
-			upsert cont DummyJSON_Id__c;
-        }
+            if(response.getStatusCode() == 200) {
+                Contact cont = createContactFromJson(response.getBody());
+                cont.DummyJSON_Id__c = dummyUserId;
+                try {
+                    upsert cont DummyJSON_Id__c;
+                } catch (Exception e) {
+                    System.debug('DML Exception in getDummyJSONUserFromId: ' + e.getMessage());
+                }
+            }  else {
+                System.debug('Error getting user info: ' + response.getStatus());
+            }
 	}
 
 	/*
@@ -111,12 +117,16 @@ public with sharing class DummyJSONCallout {
         Http http = new Http();
         HttpResponse response = http.send(request);
 
-        if(response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-			Contact cont = new Contact(Id = contactId, DummyJSON_Last_Updated__c = System.now());
-			update cont;
-        } else {
-            System.debug('Error creating user: ' + response.getStatus());
-        }
+            if(response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+                Contact cont = new Contact(Id = contactId, DummyJSON_Last_Updated__c = System.now());
+                try {
+                    update cont;
+                } catch (Exception e) {
+                    System.debug('DML Exception in postCreateDummyJSONUser: ' + e.getMessage());
+                }
+            } else {
+                System.debug('Error creating user: ' + response.getStatus());
+            }
 	}
 
 	/*
