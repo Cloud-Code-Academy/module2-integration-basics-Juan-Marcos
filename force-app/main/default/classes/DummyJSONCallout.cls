@@ -33,7 +33,7 @@ public with sharing class DummyJSONCallout {
 	 *
      * @param dummyUserId The ID of the user in the external system to fetch data for.
      */
-
+    @Future(callout=true)
 	public static void getDummyJSONUserFromId(String dummyUserId) {
         HttpRequest request = new HttpRequest();
         request.setEndpoint('callout:DummyJsonUser/' + dummyUserId);
@@ -100,7 +100,7 @@ public with sharing class DummyJSONCallout {
      *
      * @param contactId The Salesforce Contact ID used to generate the JSON payload for the external system.
      */
-
+    @Future(callout=true)
 	public static void postCreateDummyJSONUser(String contactId) {
         HttpRequest request = new HttpRequest();
         request.setEndpoint('callout:DummyJsonUser/' + 'add');
